@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>테크 투자 맵 — 반도체 · 광통신 · 우주</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c10;
+  --bg2: #111318;
+  --bg3: #1a1d24;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #e8eaf0;
+  --text2: #9095a8;
+  --text3: #555b6e;
+  --blue: #3b82f6;
+  --blue2: #1d4ed8;
+  --teal: #14b8a6;
+  --purple: #8b5cf6;
+  --amber: #f59e0b;
+  --coral: #f97316;
+  --green: #22c55e;
+  --pink: #ec4899;
+  --red: #ef4444;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-weight:400;line-height:1.6;min-height:100vh}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,12,16,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem}
+.nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:0;height:56px}
+.nav-logo{font-family:'Space Mono',monospace;font-size:13px;color:var(--text2);letter-spacing:.08em;margin-right:2rem;white-space:nowrap}
+.nav-logo span{color:var(--blue)}
+.nav-tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;white-space:nowrap;color:var(--text3);transition:all .15s;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif}
+.nav-tab:hover{color:var(--text2);background:var(--bg3)}
+.nav-tab.active{color:var(--text);background:var(--bg3);border:1px solid var(--border2)}
+
+/* HERO */
+.hero{max-width:1400px;margin:0 auto;padding:4rem 2rem 2.5rem}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--blue);margin-bottom:.75rem;text-transform:uppercase}
+.hero-title{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1.15;margin-bottom:1rem}
+.hero-title .accent{background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:15px;color:var(--text2);max-width:600px;line-height:1.7}
+.hero-stats{display:flex;gap:2rem;margin-top:2rem;flex-wrap:wrap}
+.hero-stat .num{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--text)}
+.hero-stat .label{font-size:11px;color:var(--text3);margin-top:2px;letter-spacing:.04em}
+
+/* SECTION */
+.section{display:none;max-width:1400px;margin:0 auto;padding:0 2rem 4rem}
+.section.active{display:block}
+.section-head{margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.section-title{font-size:1.4rem;font-weight:700;display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem}
+.section-icon{font-size:1.2rem}
+.section-desc{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* CAT TABS */
+.cat-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.5rem}
+.cat-tab{padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--text2);background:transparent;transition:all .15s;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;gap:5px}
+.cat-tab:hover{border-color:var(--border2);color:var(--text)}
+.cat-tab.active{color:var(--text);background:var(--bg3);border-color:var(--border2)}
+.cat-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* GRADE LABEL */
+.grade-label{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin:1.25rem 0 .5rem}
+
+/* GRID */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+
+/* CARD */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 15px;cursor:pointer;transition:border-color .15s,transform .15s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;opacity:0;transition:opacity .15s}
+.card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.card:hover::before{opacity:1}
+.card.top-card::before{opacity:1}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px}
+.card-name{font-size:13px;font-weight:700;color:var(--text)}
+.badges{display:flex;gap:4px;flex-shrink:0;margin-left:6px;align-items:center}
+.grade-badge{font-size:10px;padding:2px 6px;border-radius:5px;font-weight:600}
+.top-badge{font-size:10px;padding:1px 5px;border-radius:4px;background:rgba(239,68,68,.15);color:#fca5a5;font-weight:600}
+.card-sub{font-size:11px;color:var(--text3);margin-bottom:5px}
+.cat-tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:4px;margin-bottom:6px;font-weight:500}
+.card-body{font-size:12px;color:var(--text2);line-height:1.6}
+.card-hl{font-size:11px;margin-top:7px;padding:5px 9px;border-radius:6px;background:rgba(255,255,255,.04);color:var(--text2);border-left:2px solid;line-height:1.5}
+
+/* GRADE COLORS */
+.gs{background:rgba(139,92,246,.15);color:#c4b5fd}
+.ga{background:rgba(20,184,166,.15);color:#5eead4}
+.gb{background:rgba(245,158,11,.15);color:#fcd34d}
+.gc{background:rgba(148,163,184,.12);color:#94a3b8}
+
+/* PROCESS TABS */
+.proc-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem}
+.proc-tab{padding:5px 13px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--text3);background:transparent;transition:all .15s;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;gap:5px}
+.proc-tab:hover{color:var(--text2)}
+.proc-tab.active{color:var(--text);background:var(--bg3);border-color:var(--border2)}
+.proc-num{font-family:'Space Mono',monospace;font-size:11px;opacity:.6}
+
+.proc-header{padding:12px 14px;border-radius:10px;border:1px solid var(--border);border-left-width:3px;margin-bottom:1rem;background:var(--bg2);display:flex;gap:12px;align-items:flex-start}
+.proc-num-big{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;line-height:1;flex-shrink:0;margin-top:2px}
+.proc-title-text{font-size:14px;font-weight:700;margin-bottom:3px}
+.proc-desc-text{font-size:12px;color:var(--text2);line-height:1.55}
+
+/* SHARE BARS */
+.share-section{margin-bottom:1.25rem}
+.share-title{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.6rem}
+.share-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.share-name{font-size:12px;font-weight:500;color:var(--text);width:130px;flex-shrink:0;display:flex;align-items:center;gap:5px}
+.share-flag{font-size:10px;padding:1px 5px;border-radius:3px;font-weight:600}
+.share-track{flex:1;height:7px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.share-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.share-pct{font-size:12px;font-weight:600;width:38px;text-align:right;flex-shrink:0}
+.share-note{font-size:11px;color:var(--text3);margin:-2px 0 4px 138px}
+
+/* INFO BOX */
+.info-box{border-radius:10px;padding:11px 13px;margin-bottom:1rem;font-size:12px;line-height:1.65;border:1px solid}
+.info-warn{background:rgba(245,158,11,.07);color:#fcd34d;border-color:rgba(245,158,11,.2)}
+.info-info{background:rgba(59,130,246,.07);color:#93c5fd;border-color:rgba(59,130,246,.2)}
+.info-green{background:rgba(34,197,94,.07);color:#86efac;border-color:rgba(34,197,94,.2)}
+
+/* RISK */
+.risk-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:10px}
+.risk-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.risk-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+.risk-body{font-size:12px;color:var(--text2);line-height:1.55}
+
+/* VERDICT */
+.verdict{background:var(--bg2);border-radius:10px;padding:13px 15px;border-left:3px solid var(--teal);margin-top:.5rem}
+.verdict-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px}
+.verdict-body{font-size:12px;color:var(--text2);line-height:1.65}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;padding:7px 9px;font-weight:500;color:var(--text3);border-bottom:1px solid var(--border);font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+.tbl td{padding:8px 9px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .num{text-align:right;font-family:'Space Mono',monospace}
+.tbl .up{color:var(--green)}
+.tbl .dn{color:var(--red)}
+.tbl .warn{color:var(--amber)}
+
+/* STAT ROW */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:1rem}
+.stat-card{background:var(--bg3);border-radius:8px;padding:10px 12px;border:1px solid var(--border)}
+.stat-label{font-size:11px;color:var(--text3);margin-bottom:3px}
+.stat-val{font-size:17px;font-weight:700;font-family:'Space Mono',monospace}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:1px}
+
+/* ROAD MAP */
+.road-item{display:flex;gap:10px;margin-bottom:11px;align-items:flex-start}
+.road-date{font-size:11px;color:var(--text3);width:90px;flex-shrink:0;padding-top:2px;font-family:'Space Mono',monospace}
+.road-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.road-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+.road-content{font-size:12px;color:var(--text2);line-height:1.5}
+
+/* SUB TABS */
+.sub-tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.sub-tab{padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--text3);background:transparent;transition:all .15s;font-family:'Noto Sans KR',sans-serif}
+.sub-tab:hover{color:var(--text2)}
+.sub-tab.active{background:var(--bg3);border-color:var(--border2);color:var(--text);font-weight:500}
+.sub-panel{display:none}.sub-panel.on{display:block}
+
+/* BAR */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bar-label{width:140px;color:var(--text2);flex-shrink:0;font-size:11px}
+.bar-track{flex:1;height:7px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px}
+.bar-val{width:60px;text-align:right;font-family:'Space Mono',monospace;font-weight:600;flex-shrink:0;font-size:12px}
+
+/* COMPARE GRID */
+.cmp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:1rem}
+.cmp-box{border-radius:8px;padding:10px 12px;border:1px solid var(--border);background:var(--bg2)}
+.cmp-head{font-weight:700;margin-bottom:5px;font-size:13px}
+.cmp-body{color:var(--text2);line-height:1.7;font-size:11px}
+
+/* SEARCH */
+.search-wrap{margin-bottom:.85rem}
+.search-wrap input{width:100%;padding:9px 14px;font-size:13px;border:1px solid var(--border);border-radius:8px;background:var(--bg2);color:var(--text);font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color .15s}
+.search-wrap input:focus{border-color:var(--border2)}
+.search-wrap input::placeholder{color:var(--text3)}
+
+/* FOOTER */
+footer{max-width:1400px;margin:0 auto;padding:2rem;border-top:1px solid var(--border);margin-top:2rem}
+.footer-text{font-size:12px;color:var(--text3);line-height:1.7}
+.footer-text strong{color:var(--text2)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:3px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">TECH<span>MAP</span></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showSection('home',this)">홈</button>
+      <button class="nav-tab" onclick="showSection('semiconductor',this)">⚙️ 반도체 전공정 장비</button>
+      <button class="nav-tab" onclick="showSection('semi-eco',this)">🔬 반도체 생태계 전체</button>
+      <button class="nav-tab" onclick="showSection('optical',this)">💡 광통신</button>
+      <button class="nav-tab" onclick="showSection('space',this)">🚀 우주·스페이스X</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="section active" id="sec-home">
+  <div class="hero">
+    <div class="hero-eyebrow">2026 한국 테크 투자 맵</div>
+    <h1 class="hero-title">반도체 · 광통신 · 우주<br><span class="accent">밸류체인 완전 분석</span></h1>
+    <p class="hero-sub">반도체 전공정 6단계부터 광통신 인프라, 스페이스X 공급망까지 — 국내 관련주를 체계적으로 분류하고 투자 관점에서 설명합니다.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">80+</div><div class="label">분석 기업</div></div>
+      <div class="hero-stat"><div class="num">4</div><div class="label">테마 섹터</div></div>
+      <div class="hero-stat"><div class="num">6</div><div class="label">전공정 공정 분류</div></div>
+    </div>
+  </div>
+  <div class="section" style="display:block">
+    <div class="cards-grid" style="max-width:1400px;margin:0 2rem">
+      <div class="card" style="cursor:pointer" onclick="showSection('semiconductor',document.querySelectorAll('.nav-tab')[1])">
+        <div style="font-size:2rem;margin-bottom:.75rem">⚙️</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">반도체 전공정 장비</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">노광·식각·증착·이온주입·CMP·계측 6개 공정별 글로벌 점유율과 국내 기업 분류</div>
+        <div style="margin-top:.75rem;font-size:11px;color:var(--blue)">→ 보기</div>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="showSection('semi-eco',document.querySelectorAll('.nav-tab')[2])">
+        <div style="font-size:2rem;margin-bottom:.75rem">🔬</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">반도체 생태계 전체</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">파운드리·소재·기판·CCL·테스트 소켓·OSAT·디자인하우스 등 80개+ 기업 완전 분류</div>
+        <div style="margin-top:.75rem;font-size:11px;color:var(--purple)">→ 보기</div>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="showSection('optical',document.querySelectorAll('.nav-tab')[3])">
+        <div style="font-size:2rem;margin-bottom:.75rem">💡</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">광통신 관련주</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">AI 데이터센터 필수 인프라 — 광섬유·트랜시버·전송장비·기지국·테스트 카테고리별 분류</div>
+        <div style="margin-top:.75rem;font-size:11px;color:var(--teal)">→ 보기</div>
+      </div>
+      <div class="card" style="cursor:pointer" onclick="showSection('space',document.querySelectorAll('.nav-tab')[4])">
+        <div style="font-size:2rem;margin-bottom:.75rem">🚀</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">우주·스페이스X</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">스페이스X 상장 모멘텀 — 직접 공급사·지분 투자사·위성·방산·서비스 5개 카테고리</div>
+        <div style="margin-top:.75rem;font-size:11px;color:var(--coral)">→ 보기</div>
+      </div>
+    </div>
+    <div style="max-width:1400px;margin:2rem 2rem 0;padding:14px 16px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--border);font-size:12px;color:var(--text3);line-height:1.7">
+      <strong style="color:var(--text2)">⚠️ 투자 유의사항</strong> — 이 사이트의 모든 내용은 공개된 정보와 증권사 리포트를 기반으로 한 <strong style="color:var(--text2)">정보 제공 목적</strong>이며, 금융 투자 자문이 아닙니다. 투자 판단과 결과의 책임은 전적으로 본인에게 있습니다.
+    </div>
+  </div>
+</div>
+
+<!-- 반도체 전공정 장비 -->
+<div class="section" id="sec-semiconductor">
+  <div class="section-head">
+    <div class="section-title"><span class="section-icon">⚙️</span> 반도체 전공정 장비 — 6개 공정 분류</div>
+    <div class="section-desc">웨이퍼 위에 회로를 그리는 전공정의 6단계. 각 공정별 글로벌 점유율과 국내 기업 포지션을 확인하세요.</div>
+  </div>
+
+  <div class="proc-tabs" id="proc-tabs"></div>
+  <div id="proc-content"></div>
+</div>
+
+<!-- 반도체 생태계 전체 -->
+<div class="section" id="sec-semi-eco">
+  <div class="section-head">
+    <div class="section-title"><span class="section-icon">🔬</span> 반도체 생태계 전체</div>
+    <div class="section-desc">파운드리부터 소재·기판·소켓·OSAT·디자인하우스까지 — 반도체 밸류체인 전 기업을 한눈에.</div>
+  </div>
+  <div class="search-wrap"><input id="eco-search" placeholder="🔍  기업명 검색..." oninput="renderEco()"></div>
+  <div class="cat-tabs" id="eco-tabs"></div>
+  <div id="eco-content"></div>
+</div>
+
+<!-- 광통신 -->
+<div class="section" id="sec-optical">
+  <div class="section-head">
+    <div class="section-title"><span class="section-icon">💡</span> 광통신 관련주</div>
+    <div class="section-desc">AI 데이터센터 병목 해소의 핵심 기술. 젠슨 황이 지목한 미래 인프라 — 밸류체인 5개 카테고리로 분류.</div>
+  </div>
+  <div class="info-info" style="margin-bottom:1rem;font-size:12px;line-height:1.6">엔비디아가 루멘텀·코히어런트에 약 6조원 지분 투자 단행. GTC 2026에서 광통신을 AI 데이터센터 병목 해소의 핵심 기술로 지목. 구리선 기반 전기 신호의 한계를 빛으로 대체하는 구조적 전환이 시작됐습니다.</div>
+  <div class="cat-tabs" id="opt-tabs"></div>
+  <div id="opt-content"></div>
+</div>
+
+<!-- 우주 -->
+<div class="section" id="sec-space">
+  <div class="section-head">
+    <div class="section-title"><span class="section-icon">🚀</span> 우주·스페이스X 관련주</div>
+    <div class="section-desc">기업가치 1.75조 달러, 역대 최대 IPO 추진 중인 스페이스X — 국내 직접 공급사·지분 투자사·위성 사업자까지 5개 카테고리 분류.</div>
+  </div>
+  <div class="info-info" style="margin-bottom:1rem;font-size:12px;line-height:1.6">스페이스X는 SEC에 상장 신청서 제출, 기업가치 약 1.75조 달러(약 2,550조원). 국내 투자자는 직접 청약이 사실상 불가능해 관련주로 우회 수급이 집중됩니다.</div>
+  <div class="cat-tabs" id="space-tabs"></div>
+  <div id="space-content"></div>
+</div>
+
+<footer>
+  <div class="footer-text">
+    <strong>TECH MAP</strong> — 반도체·광통신·우주 투자 분석 대시보드<br>
+    본 자료는 공개된 증권사 리포트 및 뉴스 기반 정보 제공 목적으로 작성됐으며, 금융 투자 자문이 아닙니다. 투자 판단과 책임은 전적으로 투자자 본인에게 있습니다. | 기준일: 2026년 4월
+  </div>
+</footer>
+
+<script>
+/* ─── 내비게이션 ─── */
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+/* ─── 전공정 데이터 ─── */
+const PROCS = [
+  {
+    id:'litho', num:'01', name:'노광 (Lithography)', color:'#8b5cf6',
+    desc:'빛(EUV/DUV)으로 웨이퍼 위에 회로 패턴을 인쇄하는 공정. 반도체 집적도를 결정하는 핵심. EUV 없이는 5nm 이하 불가.',
+    shares:[
+      {name:'ASML',pct:100,fill:'#8b5cf6',flag:'NL',note:'EUV 100% 독점'},
+      {name:'니콘',pct:8,fill:'#6b7280',flag:'JP',note:'DUV 성숙 공정'},
+      {name:'캐논',pct:5,fill:'#6b7280',flag:'JP',note:'DUV 레거시'},
+    ],
+    companies:[
+      {n:'ASML',g:'S',sub:'노광 장비 / 네덜란드',desc:'EUV 노광 장비 전 세계 100% 독점. 5nm 이하 모든 첨단 칩은 이 회사 없이 제조 불가.',hl:'EUV 지구상 유일 공급사',global:true},
+      {n:'에프에스티',g:'B',sub:'EUV 펠리클 / 국내',desc:'EUV 마스크 보호막(펠리클) 국내 핵심 공급사. EUV 공정 필수 소모품.',hl:'EUV 펠리클 국내 유일'},
+      {n:'동진쎄미켐',g:'B',sub:'포토레지스트 / 국내',desc:'노광 공정 핵심 약품인 포토레지스트(감광액) 국내 1위.',hl:'포토레지스트 국내 1위'},
+      {n:'나래나노텍',g:'C',sub:'코팅 장비 / 국내',desc:'포토레지스트를 웨이퍼에 고르게 도포하는 슬롯다이 코팅 장비.',hl:'PR 코팅 장비'},
+    ]
+  },
+  {
+    id:'etch', num:'02', name:'식각 (Etching)', color:'#3b82f6',
+    desc:'노광 후 불필요한 막을 깎아내는 공정. 플라즈마(건식) 또는 화학물질(습식) 두 방식.',
+    shares:[
+      {name:'램리서치',pct:55,fill:'#3b82f6',flag:'US',note:'플라즈마 식각 1위'},
+      {name:'도쿄일렉트론',pct:22,fill:'#2563eb',flag:'JP',note:'식각 2위'},
+      {name:'AMAT',pct:15,fill:'#1d4ed8',flag:'US',note:'식각 3위'},
+      {name:'피에스케이',pct:8,fill:'#22c55e',flag:'KR',note:'PR박리 1위'},
+    ],
+    companies:[
+      {n:'램리서치',g:'S',sub:'플라즈마 식각 / 미국',desc:'플라즈마 식각 장비 세계 1위(~55%). 삼성·TSMC·하이닉스 모두 이 회사 장비 필수.',hl:'플라즈마 식각 글로벌 1위',global:true},
+      {n:'피에스케이',g:'A',sub:'PR 박리(애싱) / 국내',desc:'노광 후 남은 포토레지스트를 플라즈마로 제거하는 애싱 장비 세계 1위.',hl:'PR 박리 장비 글로벌 1위'},
+      {n:'도쿄일렉트론',g:'A',sub:'식각·증착 / 일본',desc:'식각·코터 등 전공정 장비 세계 3위권. 일본 최대 반도체 장비사.',hl:'일본 반도체 장비 1위',global:true},
+      {n:'솔브레인',g:'A',sub:'식각액(습식) / 국내',desc:'습식 식각용 HF 계열 식각액·세정액 국내 최대 공급사.',hl:'습식 식각액 국내 최대'},
+      {n:'티씨케이',g:'A',sub:'SiC 링 소모품 / 국내',desc:'식각 장비 내 웨이퍼를 잡아주는 SiC 링 세계 1위. 공정 중 반드시 소모.',hl:'SiC 링 세계 1위 소모품'},
+      {n:'후성',g:'B',sub:'특수 가스 / 국내',desc:'식각 공정용 불산 등 특수 가스·불산 공급사.',hl:'불산·특수 가스 공급'},
+    ]
+  },
+  {
+    id:'depo', num:'03', name:'증착 (Deposition)', color:'#22c55e',
+    desc:'웨이퍼 표면에 얇은 막을 입히는 공정. CVD·PVD·ALD 세 방식. 수십 번 반복.',
+    shares:[
+      {name:'AMAT',pct:40,fill:'#22c55e',flag:'US',note:'CVD·PVD·ALD 종합 1위'},
+      {name:'도쿄일렉트론',pct:25,fill:'#16a34a',flag:'JP',note:'CVD·ALD'},
+      {name:'램리서치',pct:15,fill:'#15803d',flag:'US',note:'ALD 강자'},
+      {name:'국내 4사',pct:10,fill:'#166534',flag:'KR',note:'주성·원익·유진·테스'},
+    ],
+    companies:[
+      {n:'AMAT(어플라이드)',g:'S',sub:'CVD·PVD·ALD 종합 / 미국',desc:'CVD·PVD·ALD 등 박막 증착 전 방식 세계 1위. 이온주입·CMP·열처리까지 반도체 장비 종합 대장.',hl:'증착 장비 전 방식 글로벌 1위',global:true},
+      {n:'HPSP',g:'A',sub:'고압 수소 어닐링 / 국내',desc:'증착 후 게이트 절연막 품질을 개선하는 고압 수소 어닐링 장비 국내 독점 대장. 선단 공정 필수.',hl:'고압 수소 어닐링 국내 독점'},
+      {n:'주성엔지니어링',g:'B',sub:'ALD·CVD / 국내',desc:'ALD·CVD 증착 장비 국내 대표사. HPSP 어닐링 수혜 연동.',hl:'증착 장비 국내 대표'},
+      {n:'원익IPS',g:'B',sub:'CVD·ALD / 국내',desc:'CVD·ALD 증착 장비 삼성·하이닉스 동시 공급.',hl:'삼성·하이닉스 동시 납품'},
+      {n:'유진테크',g:'B',sub:'CVD·열처리 / 국내',desc:'CVD 증착 및 열처리 장비. 메모리 공정 특화.',hl:'메모리 공정 CVD 전문'},
+      {n:'테스',g:'B',sub:'CVD / 국내',desc:'CVD 증착 장비 공급사.',hl:'국내 CVD 증착 장비'},
+    ]
+  },
+  {
+    id:'ion', num:'04', name:'이온주입 / 열처리', color:'#f59e0b',
+    desc:'이온주입: 웨이퍼에 불순물 이온을 쏘아 전기 특성 부여. 열처리: 주입된 이온을 활성화·안정화.',
+    shares:[
+      {name:'AMAT',pct:60,fill:'#f59e0b',flag:'US',note:'이온주입·열처리 1위'},
+      {name:'Axcelis',pct:25,fill:'#d97706',flag:'US',note:'이온주입 전문'},
+      {name:'SCREEN홀딩스',pct:10,fill:'#b45309',flag:'JP',note:'열처리'},
+    ],
+    companies:[
+      {n:'AMAT(어플라이드)',g:'S',sub:'이온주입·열처리 / 미국',desc:'이온주입·열처리·확산 장비도 공급하는 종합 장비사. 반도체 전 공정 커버.',hl:'이온주입·열처리 글로벌 1위',global:true},
+      {n:'HPSP',g:'A',sub:'고압 수소 어닐링 / 국내',desc:'이온주입 후 게이트 절연막을 고압 수소 분위기에서 열처리해 결함 제거. 3nm 이하 필수.',hl:'선단 공정 수율 핵심 장비'},
+      {n:'원익머트리얼즈',g:'B',sub:'수소 가스 / 국내',desc:'HPSP 어닐링 공정용 특수 수소 가스 공급사.',hl:'HPSP 연동 수소 가스'},
+      {n:'유니셈',g:'B',sub:'스크러버·칠러 / 국내',desc:'공정 중 발생하는 폐가스를 처리하는 스크러버와 온도 제어 칠러 전문.',hl:'공정 유틸리티 장비(스크러버·칠러)'},
+    ]
+  },
+  {
+    id:'cmp', num:'05', name:'세정 및 평탄화 (CMP)', color:'#ec4899',
+    desc:'CMP: 웨이퍼 표면을 슬러리로 갈아 평탄하게. 세정: 각 공정 후 이물질 제거. 수율에 직결.',
+    shares:[
+      {name:'AMAT',pct:50,fill:'#ec4899',flag:'US',note:'CMP 장비 1위'},
+      {name:'에바라',pct:20,fill:'#db2777',flag:'JP',note:'CMP 장비 2위'},
+      {name:'SCREEN홀딩스',pct:30,fill:'#be185d',flag:'JP',note:'세정 장비 1위'},
+      {name:'케이씨텍',pct:5,fill:'#22c55e',flag:'KR',note:'국내 CMP 1위'},
+    ],
+    companies:[
+      {n:'AMAT(어플라이드)',g:'S',sub:'CMP 장비 / 미국',desc:'CMP(화학적 기계 연마) 장비 세계 1위. 슬러리·패드 포함 CMP 풀패키지 공급.',hl:'CMP 장비 글로벌 1위',global:true},
+      {n:'솔브레인',g:'A',sub:'CMP 슬러리·세정액 / 국내',desc:'CMP 슬러리(연마제)와 세정액 국내 최대 공급. 공장이 돌아가면 반드시 소모.',hl:'CMP 슬러리·세정 케미컬 국내 최대'},
+      {n:'피에스케이',g:'A',sub:'PR 박리 / 국내',desc:'세정 인접 공정인 PR 박리(애싱) 장비 세계 1위.',hl:'PR 박리 세계 1위'},
+      {n:'케이씨텍',g:'B',sub:'CMP 장비+슬러리 / 국내',desc:'CMP 장비와 슬러리를 동시에 공급하는 국내 유일 업체.',hl:'국내 유일 CMP 장비+슬러리 동시'},
+      {n:'동진쎄미켐',g:'B',sub:'CMP 슬러리 / 국내',desc:'CMP용 슬러리와 포토레지스트 동시 공급. 솔브레인과 경쟁.',hl:'CMP 슬러리 국내 2위권'},
+    ]
+  },
+  {
+    id:'mi', num:'06', name:'계측 및 검사 (MI)', color:'#14b8a6',
+    desc:'각 공정 후 패턴이 올바른지, 결함이 없는지 검사. 수율(정상 칩 비율)을 직접 결정.',
+    shares:[
+      {name:'KLA',pct:55,fill:'#14b8a6',flag:'US',note:'결함 검사·계측 1위'},
+      {name:'AMAT',pct:20,fill:'#0d9488',flag:'US',note:'계측 2위'},
+      {name:'오로스테크놀로지',pct:8,fill:'#22c55e',flag:'KR',note:'오버레이 측정'},
+    ],
+    companies:[
+      {n:'KLA',g:'S',sub:'결함검사·계측 / 미국',desc:'반도체 패턴 계측·결함 검사 장비 세계 1위(55%+). 수율 결정하는 검사 분야 독보적 지위.',hl:'계측·검사 장비 글로벌 독점',global:true},
+      {n:'오로스테크놀로지',g:'A',sub:'오버레이 측정 / 국내',desc:'층간 정렬 오차(오버레이)를 측정하는 장비 국내 강자. 층이 어긋나면 칩 전체가 불량.',hl:'오버레이 측정 국내 대장'},
+      {n:'기가비스',g:'B',sub:'기판 AOI / 국내',desc:'기판 회로 자동광학검사(AOI) 장비 전문.',hl:'기판 AOI 검사 강소'},
+      {n:'HB테크놀로지',g:'B',sub:'글라스기판 검사 / 국내',desc:'디스플레이 검사 1위 기술을 반도체에 이식. 글라스 기판 검사·리페어 장비 특화.',hl:'글라스 기판 검사·리페어 특화'},
+    ]
+  },
+];
+
+/* ─── 전공정 렌더링 ─── */
+let activeProcId = 'litho';
+function renderProc() {
+  const tabsEl = document.getElementById('proc-tabs');
+  const contentEl = document.getElementById('proc-content');
+  tabsEl.innerHTML = '';
+  PROCS.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'proc-tab' + (p.id === activeProcId ? ' active' : '');
+    btn.style.borderColor = p.id === activeProcId ? p.color : '';
+    btn.style.color = p.id === activeProcId ? p.color : '';
+    btn.innerHTML = `<span class="proc-num">${p.num}</span>${p.name}`;
+    btn.onclick = () => { activeProcId = p.id; renderProcContent(); document.querySelectorAll('.proc-tab').forEach(b=>{b.classList.remove('active');b.style.borderColor='';b.style.color='';}); btn.classList.add('active'); btn.style.borderColor = p.color; btn.style.color = p.color; };
+    tabsEl.appendChild(btn);
+  });
+  renderProcContent();
+}
+function renderProcContent() {
+  const p = PROCS.find(x => x.id === activeProcId);
+  const el = document.getElementById('proc-content');
+  let html = `<div class="proc-header" style="border-left-color:${p.color}">
+    <div class="proc-num-big" style="color:${p.color}">${p.num}</div>
+    <div><div class="proc-title-text">${p.name}</div><div class="proc-desc-text">${p.desc}</div></div>
+  </div>
+  <div class="share-section">
+    <div class="share-title">글로벌 시장 점유율 (추정)</div>`;
+  p.shares.forEach(s => {
+    const isKR = s.flag === 'KR';
+    html += `<div class="share-row">
+      <div class="share-name"><span class="share-flag" style="background:${isKR?'rgba(34,197,94,.15)':'rgba(59,130,246,.12)'};color:${isKR?'#86efac':'#93c5fd'}">${s.flag}</span>${s.name}</div>
+      <div class="share-track"><div class="share-fill" style="width:${Math.min(s.pct,100)}%;background:${s.fill}"></div></div>
+      <div class="share-pct" style="color:${s.fill}">${s.pct}%</div>
+    </div><div class="share-note">${s.note}</div>`;
+  });
+  html += `</div><div class="grade-label">S급 — 글로벌 독점·압도적 1위</div><div class="cards-grid">`;
+  const byGrade = {};
+  p.companies.forEach(c => { if (!byGrade[c.g]) byGrade[c.g]=[]; byGrade[c.g].push(c); });
+  const glabels = {S:'S급 — 글로벌 독점·압도적 1위',A:'A급 — 국내외 우량주',B:'B급 — 관심주',C:'C급 — 강소·틈새'};
+  const gcls = {S:'gs',A:'ga',B:'gb',C:'gc'};
+  el.innerHTML = '';
+  const headerDiv = document.createElement('div');
+  headerDiv.innerHTML = `<div class="proc-header" style="border-left-color:${p.color}">
+    <div class="proc-num-big" style="color:${p.color}">${p.num}</div>
+    <div><div class="proc-title-text">${p.name}</div><div class="proc-desc-text">${p.desc}</div></div>
+  </div>`;
+  el.appendChild(headerDiv);
+  const shareDiv = document.createElement('div');
+  shareDiv.className = 'share-section';
+  shareDiv.innerHTML = `<div class="share-title">글로벌 시장 점유율 (추정)</div>`;
+  p.shares.forEach(s => {
+    const isKR = s.flag === 'KR';
+    const row = document.createElement('div');
+    row.innerHTML = `<div class="share-row">
+      <div class="share-name"><span class="share-flag" style="background:${isKR?'rgba(34,197,94,.15)':'rgba(59,130,246,.12)'};color:${isKR?'#86efac':'#93c5fd'}">${s.flag}</span>${s.name}</div>
+      <div class="share-track"><div class="share-fill" style="width:${Math.min(s.pct,100)}%;background:${s.fill}"></div></div>
+      <div class="share-pct" style="color:${s.fill}">${s.pct}%</div>
+    </div><div class="share-note">${s.note}</div>`;
+    shareDiv.appendChild(row);
+  });
+  el.appendChild(shareDiv);
+  ['S','A','B','C'].forEach(g => {
+    if (!byGrade[g]) return;
+    const lbl = document.createElement('div');
+    lbl.className = 'grade-label';
+    lbl.textContent = glabels[g];
+    el.appendChild(lbl);
+    const grid = document.createElement('div');
+    grid.className = 'cards-grid';
+    byGrade[g].forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'card' + (g==='S'?' top-card':'');
+      card.style.borderLeftColor = p.color;
+      if(g==='S') card.style.setProperty('--before-bg', p.color);
+      card.innerHTML = `<div class="card-head"><span class="card-name">${c.n}${c.global?' 🌐':''}</span><div class="badges"><span class="grade-badge ${gcls[g]}">${g}급</span></div></div>
+        <div class="card-sub">${c.sub}</div>
+        <div class="card-body">${c.desc}</div>
+        <div class="card-hl" style="border-left-color:${p.color}">${c.hl}</div>`;
+      grid.appendChild(card);
+    });
+    el.appendChild(grid);
+  });
+}
+
+/* ─── 생태계 전체 데이터 ─── */
+const ECO_CATS = {
+  '파운드리':   {label:'🏭 생산(파운드리/IDM)',color:'#f59e0b'},
+  '전공정장비': {label:'⚙️ 전공정 장비',color:'#3b82f6'},
+  '후공정장비': {label:'🔧 후공정 장비',color:'#22c55e'},
+  '소재':       {label:'🧪 소재',color:'#f97316'},
+  '기판CCL':    {label:'📋 기판·CCL',color:'#ec4899'},
+  '테스트소켓': {label:'🔌 테스트 소켓',color:'#8b5cf6'},
+  'OSAT':       {label:'📦 후공정 OSAT',color:'#14b8a6'},
+  '디자인하우스':{label:'📐 디자인하우스',color:'#9ca3af'},
+};
+const ECO_DATA = [
+  {n:'삼성전자',g:'S',c:'파운드리',desc:'D램·낸드 세계 1위+파운드리 2위. IDM.',hl:'메모리·파운드리 동시 1위'},
+  {n:'SK하이닉스',g:'S',c:'파운드리',desc:'HBM 세계 1위. AI 가속기 핵심 메모리.',hl:'엔비디아 HBM 1차 공급사'},
+  {n:'TSMC',g:'S',c:'파운드리',global:true,desc:'세계 1위 파운드리. 60%+ 점유율.',hl:'EUV 최선단 공정 독점'},
+  {n:'한미반도체',g:'S',c:'후공정장비',desc:'HBM용 TC본더 세계 1위.',hl:'HBM 대장, TC본더 글로벌 1위'},
+  {n:'리노공업',g:'S',c:'테스트소켓',desc:'반도체 검사 소켓 세계 1위. 수십%대 영업이익.',hl:'테스트 소켓 독보적 1위'},
+  {n:'두산(CCL)',g:'S',c:'기판CCL',desc:'CCL 세계 1위. 엔비디아 AI 가속기 기판 독점.',hl:'엔비디아 블랙웰 공급망 핵심'},
+  {n:'DB하이텍',g:'C',c:'파운드리',desc:'8인치 웨이퍼 전문 파운드리.',hl:'8인치 레거시 파운드리'},
+  {n:'ASML',g:'S',c:'전공정장비',global:true,desc:'EUV 노광 장비 100% 독점.',hl:'EUV 유일 공급사'},
+  {n:'피에스케이',g:'A',c:'전공정장비',desc:'PR 박리 장비 세계 1위.',hl:'PR 박리 글로벌 1위'},
+  {n:'HPSP',g:'A',c:'전공정장비',desc:'고압 수소 어닐링 국내 독점 대장.',hl:'고압 수소 어닐링 국내 독점'},
+  {n:'오로스테크놀로지',g:'A',c:'전공정장비',desc:'오버레이 측정 장비 국내 강자.',hl:'오버레이 측정 국내 강자'},
+  {n:'주성엔지니어링',g:'B',c:'전공정장비',desc:'ALD·CVD 증착 장비 국내 대표.',hl:'증착 장비 국내 대표'},
+  {n:'원익IPS',g:'B',c:'전공정장비',desc:'CVD·ALD 삼성·하이닉스 동시 공급.',hl:'삼성·하이닉스 납품'},
+  {n:'유진테크',g:'B',c:'전공정장비',desc:'CVD·열처리 메모리 공정 전문.',hl:'메모리 공정 CVD'},
+  {n:'케이씨텍',g:'B',c:'전공정장비',desc:'CMP 장비+슬러리 국내 대표.',hl:'CMP 장비+슬러리 동시'},
+  {n:'유니셈',g:'B',c:'전공정장비',desc:'스크러버·칠러 유틸리티 장비.',hl:'공정 유틸리티 강자'},
+  {n:'에프에스티',g:'B',c:'전공정장비',desc:'EUV 펠리클 국내 핵심 공급사.',hl:'EUV 펠리클 국내 유일'},
+  {n:'코미코',g:'B',c:'전공정장비',desc:'장비 부품 정밀 세정·코팅 글로벌 20~30%.',hl:'장비 부품 정밀 세정·코팅'},
+  {n:'이오테크닉스',g:'A',c:'후공정장비',desc:'HBM 레이저 스텔스 다이싱 국내 1위.',hl:'레이저 장비 국내 1위'},
+  {n:'필옵틱스',g:'B',c:'후공정장비',desc:'글라스 기판 가공 레이저 장비 선두.',hl:'글라스 기판 레이저 1위'},
+  {n:'피에스케이홀딩스',g:'B',c:'후공정장비',desc:'HBM 리플로우 플라즈마 클리닝 장비.',hl:'HBM 후공정 플라즈마'},
+  {n:'기가비스',g:'B',c:'후공정장비',desc:'기판 AOI 검사 장비.',hl:'기판 AOI 검사'},
+  {n:'HB테크놀로지',g:'B',c:'후공정장비',desc:'글라스 기판 검사·리페어 장비.',hl:'글라스 기판 검사·리페어'},
+  {n:'티씨케이',g:'A',c:'소재',desc:'SiC 링 세계 1위. 식각 공정 소모품.',hl:'SiC 링 세계 1위'},
+  {n:'솔브레인',g:'A',c:'소재',desc:'식각액·슬러리 등 케미컬 국내 최대.',hl:'반도체 케미컬 국내 최대'},
+  {n:'동진쎄미켐',g:'B',c:'소재',desc:'포토레지스트 국내 1위.',hl:'포토레지스트 국내 1위'},
+  {n:'후성',g:'B',c:'소재',desc:'불산 등 특수 가스 공급사.',hl:'특수 가스·불산'},
+  {n:'원익머트리얼즈',g:'B',c:'소재',desc:'수소 가스 등 반도체 공정 가스.',hl:'HPSP 연동 수소 가스'},
+  {n:'삼성전기',g:'A',c:'기판CCL',desc:'FC-BGA 글로벌 톱티어. MLCC 세계 1위.',hl:'국내 기판 대장주'},
+  {n:'이수페타시스',g:'A',c:'기판CCL',desc:'AI 서버용 MLB 대장. 엔비디아·구글 직납.',hl:'AI 서버 기판 국내 최고'},
+  {n:'심텍',g:'A',c:'기판CCL',desc:'메모리 기판 세계 1위권. DDR5 전환 수혜.',hl:'메모리 기판 글로벌 1위'},
+  {n:'대덕전자',g:'A',c:'기판CCL',desc:'FC-BGA·서버·차량용 PCB 우량주.',hl:'서버·차량 기판 우량주'},
+  {n:'SKC',g:'B',c:'기판CCL',desc:'글라스 기판 개발 중. 차세대 게임체인저.',hl:'글라스 기판 국내 선두'},
+  {n:'해성디에스',g:'B',c:'기판CCL',desc:'리드프레임 글로벌 강자. 차량용 비중 높음.',hl:'차량용 리드프레임 강자'},
+  {n:'ISC',g:'A',c:'테스트소켓',desc:'실리콘 러버 소켓 세계 1위.',hl:'실리콘 러버 소켓 세계 1위'},
+  {n:'샘씨엔에스',g:'C',c:'테스트소켓',desc:'프로브카드용 세라믹 기판.',hl:'프로브카드 세라믹 기판'},
+  {n:'두산테스나',g:'A',c:'OSAT',desc:'비메모리 테스트 외주 국내 1위.',hl:'OSAT 테스트 국내 1위'},
+  {n:'하나마이크론',g:'B',c:'OSAT',desc:'반도체 조립·테스트 대행 국내 1위.',hl:'OSAT 패키징 국내 1위'},
+  {n:'가온칩스',g:'B',c:'디자인하우스',desc:'삼성 파운드리 핵심 디자인하우스.',hl:'삼성 파운드리 핵심 파트너'},
+  {n:'에이디테크놀로지',g:'B',c:'디자인하우스',desc:'대형 설계 프로젝트 특화.',hl:'대형 프로젝트 특화'},
+];
+let ecoActiveCat = '전체';
+function renderEco() {
+  const q = (document.getElementById('eco-search').value||'').toLowerCase();
+  const tabsEl = document.getElementById('eco-tabs');
+  const contentEl = document.getElementById('eco-content');
+  tabsEl.innerHTML = '';
+  const allCats = ['전체',...Object.keys(ECO_CATS)];
+  allCats.forEach(cat => {
+    const cnt = cat==='전체'?ECO_DATA.length:ECO_DATA.filter(d=>d.c===cat).length;
+    const btn = document.createElement('button');
+    btn.className = 'cat-tab'+(cat===ecoActiveCat?' active':'');
+    const color = cat==='전체'?'#6b7280':ECO_CATS[cat].color;
+    btn.innerHTML = `<div class="cat-dot" style="background:${color}"></div>${cat==='전체'?'전체 보기':ECO_CATS[cat].label.replace(/^[^\s]+ /,'')} <span style="font-size:10px;color:var(--text3)">${cnt}</span>`;
+    btn.onclick=()=>{ecoActiveCat=cat;renderEco();document.querySelectorAll('#eco-tabs .cat-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');};
+    tabsEl.appendChild(btn);
+  });
+  let filtered = ecoActiveCat==='전체'?ECO_DATA:ECO_DATA.filter(d=>d.c===ecoActiveCat);
+  if(q) filtered=filtered.filter(d=>d.n.toLowerCase().includes(q)||d.desc.toLowerCase().includes(q)||d.hl.toLowerCase().includes(q));
+  contentEl.innerHTML='';
+  const groups={};
+  filtered.forEach(d=>{if(!groups[d.g])groups[d.g]=[];groups[d.g].push(d);});
+  const glabels={S:'S급 — 글로벌 독점·압도적 1위',A:'A급 — 우량주',B:'B급 — 관심주',C:'C급 — 강소·틈새'};
+  const gcls={S:'gs',A:'ga',B:'gb',C:'gc'};
+  ['S','A','B','C'].forEach(g=>{
+    if(!groups[g]) return;
+    const lbl=document.createElement('div');lbl.className='grade-label';lbl.textContent=glabels[g]+` (${groups[g].length}개)`;contentEl.appendChild(lbl);
+    const grid=document.createElement('div');grid.className='cards-grid';
+    groups[g].forEach(d=>{
+      const catObj=ECO_CATS[d.c];
+      const card=document.createElement('div');
+      card.className='card'+(g==='S'?' top-card':'');
+      card.style.borderLeftColor=catObj?catObj.color:'#6b7280';
+      card.innerHTML=`<div class="card-head"><span class="card-name">${d.n}${d.global?' 🌐':''}</span><div class="badges"><span class="grade-badge ${gcls[g]}">${g}급</span></div></div>
+        <div class="card-sub">${catObj?catObj.label:d.c}</div>
+        <div class="card-body">${d.desc}</div>
+        <div class="card-hl" style="border-left-color:${catObj?catObj.color:'#6b7280'}">${d.hl}</div>`;
+      grid.appendChild(card);
+    });
+    contentEl.appendChild(grid);
+  });
+  if(!filtered.length){contentEl.innerHTML='<div style="padding:2rem;text-align:center;color:var(--text3);font-size:13px">검색 결과가 없습니다.</div>';}
+}
+
+/* ─── 광통신 데이터 ─── */
+const OPT_CATS=[
+  {id:'cable',label:'🔗 광섬유·케이블',color:'#22c55e',desc:'광통신의 가장 기초 인프라. 빛이 달리는 도로. AI 데이터센터·5G·BEAD 정책 수혜.'},
+  {id:'transceiver',label:'⚡ 광트랜시버·모듈',color:'#8b5cf6',desc:'전기신호↔광신호 변환 핵심 부품. 400G→800G→1.6T로 고도화 중.'},
+  {id:'component',label:'🔬 광소자·부품',color:'#3b82f6',desc:'광회로·광분배기·광소자 등 광통신 부품. 고마진 틈새 분야.'},
+  {id:'equipment',label:'📡 전송장비·네트워크',color:'#f59e0b',desc:'광신호를 목적지까지 전달하는 MSPP·PTN·WDM 장비.'},
+  {id:'antenna',label:'📶 기지국·안테나·RF',color:'#ec4899',desc:'5G/6G 기지국 장비. 광통신은 기지국 백홀에도 사용.'},
+  {id:'test',label:'🔍 테스트·계측',color:'#14b8a6',desc:'광통신 네트워크 품질을 측정·검증하는 계측 장비.'},
+];
+const OPT_DATA=[
+  {n:'대한광통신',g:'A',c:'cable',top:true,desc:'국내 유일 광섬유 원재료→완성품 일괄 생산. 2026년 흑자전환 전망. 미국향 매출 YoY +221%. 빅테크 AI 데이터센터 수주.',hl:'광섬유→케이블 수직계열화 국내 유일'},
+  {n:'한국첨단소재',g:'B',c:'cable',desc:'광케이블 관련 소재 공급사. GTC 직후 30% 급등. OFC 2026 참가.',hl:'광케이블 소재, 테마 핵심'},
+  {n:'오이솔루션',g:'A',c:'transceiver',top:true,desc:'국내 광트랜시버 대장주. 800G 고속 광모듈 개발.',hl:'국내 광트랜시버 대장'},
+  {n:'파이버프로',g:'B',c:'transceiver',desc:'광트랜시버·광학 솔루션 전문. 800G 개발 성공.',hl:'800G 광모듈 개발'},
+  {n:'이수페타시스',g:'A',c:'transceiver',desc:'AI 서버용 MLB 기판 대장. 엔비디아·구글 직납. 광통신+반도체 겸.',hl:'엔비디아·구글 직납 AI 기판'},
+  {n:'기가레인',g:'B',c:'component',top:true,desc:'RF 케이블 및 광통신 연결 부품. 5G 기지국·통신장비 공급. GTC 후 29.9% 급등.',hl:'RF케이블+광통신 부품, 5G·AI 동시'},
+  {n:'이노인스트루먼트',g:'B',c:'component',desc:'광섬유 융착접속기·OTDR 등 광계측 장비. GTC 직후 30% 급등.',hl:'광계측기기 전문'},
+  {n:'쏘닉스',g:'C',c:'component',desc:'광통신용 광부품·광소자 공급사.',hl:'광소자·부품 강소기업'},
+  {n:'광전자',g:'C',c:'component',desc:'광반도체 소자. 레이저 다이오드·포토다이오드.',hl:'광반도체 소자 전문'},
+  {n:'오늘이엔엠',g:'C',c:'component',desc:'광통신 소자·기지국용 광부품. 에너지 효율화 솔루션.',hl:'기지국용 광부품'},
+  {n:'코위버',g:'B',c:'equipment',top:true,desc:'광통신 전송장비(MSPP·PTN) 전문. 양자암호 적용 장비 상용화.',hl:'전송장비 국내 주요, 양자암호 탑재'},
+  {n:'이노와이어리스',g:'B',c:'equipment',desc:'5G 네트워크 최적화·측정 솔루션.',hl:'5G 네트워크 최적화 솔루션'},
+  {n:'쏠리드',g:'B',c:'equipment',desc:'실내외 DAS 및 5G 중계기 전문. 북미·유럽 수출.',hl:'5G DAS·중계기, 북미 수출'},
+  {n:'CS',g:'C',c:'equipment',desc:'광통신 네트워크 장비 및 솔루션.',hl:'광통신 장비 공급'},
+  {n:'케이엠더블유',g:'A',c:'antenna',top:true,desc:'5G 기지국용 안테나·필터 국내 수출 대장. 노키아·에릭슨·삼성네트웍스 납품.',hl:'5G 안테나·필터 수출 대장'},
+  {n:'서진시스템',g:'A',c:'antenna',desc:'5G 기지국 구조물·방열 케이스. 삼성전자 네트워크 핵심 파트너.',hl:'삼성전자 네트워크 핵심 파트너'},
+  {n:'에이스테크',g:'B',c:'antenna',desc:'5G 기지국 안테나·RF 부품.',hl:'기지국 안테나·RF 부품'},
+  {n:'RFHIC',g:'B',c:'antenna',desc:'GaN 기반 RF 전력증폭기. 삼성·에릭슨 납품.',hl:'GaN RF 전력증폭기'},
+  {n:'머큐리',g:'B',c:'antenna',desc:'통신장비용 RF 부품. GTC 직후 상한가.',hl:'통신장비 RF 부품'},
+  {n:'네오셈',g:'B',c:'test',top:true,desc:'반도체·통신용 테스트 장비 전문. CXL 테스터 세계 최초 상용화.',hl:'CXL 테스터 세계 최초 — 반도체+통신 겸용'},
+  {n:'티에프이',g:'B',c:'test',desc:'5G 통신 네트워크 테스트·계측 솔루션.',hl:'5G 통신 테스트·계측'},
+];
+let optActiveCat = 'cable';
+function renderOpt() {
+  const tabsEl = document.getElementById('opt-tabs');
+  const contentEl = document.getElementById('opt-content');
+  tabsEl.innerHTML = '';
+  OPT_CATS.forEach(cat => {
+    const cnt = OPT_DATA.filter(d=>d.c===cat.id).length;
+    const btn = document.createElement('button');
+    btn.className='cat-tab'+(cat.id===optActiveCat?' active':'');
+    btn.style.borderColor=cat.id===optActiveCat?cat.color:'';
+    btn.style.color=cat.id===optActiveCat?cat.color:'';
+    btn.innerHTML=`<div class="cat-dot" style="background:${cat.color}"></div>${cat.label.replace(/^[^\s]+ /,'')} <span style="font-size:10px;opacity:.6">${cnt}</span>`;
+    btn.onclick=()=>{optActiveCat=cat.id;renderOptContent();document.querySelectorAll('#opt-tabs .cat-tab').forEach(b=>{b.classList.remove('active');b.style.borderColor='';b.style.color='';}); btn.classList.add('active');btn.style.borderColor=cat.color;btn.style.color=cat.color;};
+    tabsEl.appendChild(btn);
+  });
+  renderOptContent();
+}
+function renderOptContent() {
+  const cat = OPT_CATS.find(c=>c.id===optActiveCat);
+  const el = document.getElementById('opt-content');
+  el.innerHTML = `<div style="padding:11px 13px;border-radius:10px;border:1px solid var(--border);border-left:3px solid ${cat.color};background:var(--bg2);margin-bottom:1rem;font-size:12px;color:var(--text2);line-height:1.55">${cat.desc}</div>`;
+  const filtered = OPT_DATA.filter(d=>d.c===cat.id);
+  const gcls={S:'gs',A:'ga',B:'gb',C:'gc'};
+  const groups={};
+  filtered.forEach(d=>{if(!groups[d.g])groups[d.g]=[];groups[d.g].push(d);});
+  const glabels={S:'S급',A:'A급 — 카테고리 대장',B:'B급 — 관심주',C:'C급 — 강소'};
+  ['S','A','B','C'].forEach(g=>{
+    if(!groups[g]) return;
+    const lbl=document.createElement('div');lbl.className='grade-label';lbl.textContent=glabels[g];el.appendChild(lbl);
+    const grid=document.createElement('div');grid.className='cards-grid';
+    groups[g].forEach(d=>{
+      const card=document.createElement('div');
+      card.className='card'+(d.top?' top-card':'');
+      card.style.borderLeftColor=cat.color;
+      card.innerHTML=`<div class="card-head"><span class="card-name">${d.n}</span><div class="badges">${d.top?'<span class="top-badge">대장</span>':''}<span class="grade-badge ${gcls[g]}">${g}급</span></div></div>
+        <div class="card-body">${d.desc}</div>
+        <div class="card-hl" style="border-left-color:${cat.color}">${d.hl}</div>`;
+      grid.appendChild(card);
+    });
+    el.appendChild(grid);
+  });
+}
+
+/* ─── 우주 데이터 ─── */
+const SPACE_CATS=[
+  {id:'supply',label:'🔩 직접 공급사',color:'#ef4444',desc:'스페이스X 발사체·엔진에 들어가는 소재·부품을 실제로 납품하는 기업. 발사 횟수 증가 = 실적 직결.'},
+  {id:'invest',label:'💰 지분 투자사',color:'#8b5cf6',desc:'스페이스X에 직접 투자해 지분을 보유한 금융사. 상장 시 지분 평가이익이 조 단위로 발생 가능.'},
+  {id:'sat',label:'🛰️ 위성·우주 사업',color:'#3b82f6',desc:'위성 제조·운용·안테나·지상국 등 스타링크 확산과 함께 성장하는 뉴스페이스 기업들.'},
+  {id:'defense',label:'🛡️ 방산·항공우주',color:'#22c55e',desc:'한국형 발사체·정찰위성·방위산업을 영위하는 국내 대형 방산·우주 기업.'},
+  {id:'service',label:'📡 서비스·인프라',color:'#f59e0b',desc:'위성 데이터·영상 서비스, 통신 인프라, 계측 장비 등 우주 생태계 확장 수혜 기업.'},
+];
+const SPACE_DATA=[
+  {n:'스피어',g:'S',c:'supply',top:true,desc:'스페이스X 랩터 엔진·스타십용 니켈 초합금 1차 공급사. 10년 장기 공급계약(총 약 1.5조원, 2035년까지). 2026년 매출 1,923억원(+101%) 전망.',hl:'스페이스X 랩터 엔진 소재 1차 공급사'},
+  {n:'에이치브이엠',g:'A',c:'supply',desc:'스페이스X·보잉·록히드마틴에 로켓 엔진용 초합금 납품. 우주항공 매출 70%+. NASA·블루오리진 복수 공급.',hl:'스페이스X+NASA+블루오리진 복수 공급'},
+  {n:'켄코아에어로스페이스',g:'B',c:'supply',desc:'항공기 구조물·군용기 MRO·우주발사체 부품. 실적 부진 지속 중이어서 주의.',hl:'우주발사체 부품+항공 MRO. 실적 부진 주의'},
+  {n:'비츠로넥스텍',g:'B',c:'supply',desc:'우주항공용 특수 소재 및 전기전자 부품 공급.',hl:'우주항공 특수 소재·부품'},
+  {n:'미래에셋벤처투자',g:'S',c:'invest',top:true,desc:'미래에셋그룹이 스페이스X에 약 2억 7,800만 달러(4,100억원) 직접 투자. 상장 시 지분 평가이익 조 단위 가능. 수급 대장.',hl:'스페이스X 4,100억원 직접 투자 — 수급 대장'},
+  {n:'미래에셋증권',g:'A',c:'invest',desc:'미래에셋벤처투자 모그룹. 스페이스X 투자 수혜 그룹 차원 공유.',hl:'그룹 스페이스X 지분 가치 연동'},
+  {n:'아주IB투자',g:'B',c:'invest',desc:'스페이스X 상장 모멘텀 동반 급등 이력. VC 투자사.',hl:'우주 VC 투자사, 상장 모멘텀 수혜'},
+  {n:'루미르',g:'A',c:'sat',top:true,desc:'SAR 위성 제조·운용. 스페이스X 팰컨9에 루미르X 1호기·2호기 발사 계약 완료. 2026년 하반기 서비스 본격화.',hl:'팰컨9 2호기 발사 계약 완료'},
+  {n:'나라스페이스테크놀로지',g:'A',c:'sat',desc:'초소형 위성 팰컨9 발사 성공. AI 기반 위성 데이터 분석 플랫폼 운영.',hl:'팰컨9 발사 성공 + AI 위성 데이터'},
+  {n:'인텔리안테크',g:'A',c:'sat',desc:'해상용 VSAT 안테나 세계 1위. LEO·MEO로 확장. 스타링크 LEO 확산 직접 수혜.',hl:'위성 안테나 세계 1위 — 스타링크 수혜'},
+  {n:'쎄트렉아이',g:'A',c:'sat',desc:'국내 최고 위성 시스템 설계·제작. 한화에어로스페이스 자회사.',hl:'국내 위성 시스템 최고 기술'},
+  {n:'한화시스템',g:'A',c:'defense',top:true,desc:'원웹 지분 투자로 LEO 위성통신 진입. 초소형 정찰위성 체계 개발 경쟁 중.',hl:'LEO 위성통신 + 초소형 정찰위성'},
+  {n:'한국항공우주(KAI)',g:'A',c:'defense',desc:'누리호(KSLV-II) 개발·양산 주관사. KF-21 전투기 생산.',hl:'누리호 주관사 — 한국 우주 발사체 대장'},
+  {n:'LIG넥스원',g:'A',c:'defense',desc:'유도무기·레이더·위성통신 장비 국내 1위. 초소형 정찰위성 경쟁 참여.',hl:'초소형 정찰위성 + K-방산 수출'},
+  {n:'이노인스트루먼트',g:'B',c:'service',desc:'광계측 장비 전문. 위성 지상국·통신망 구축 필수 계측 장비 공급.',hl:'위성 지상국 구축 필수 광계측 장비'},
+];
+let spaceActiveCat='supply';
+function renderSpace(){
+  const tabsEl=document.getElementById('space-tabs');
+  const contentEl=document.getElementById('space-content');
+  tabsEl.innerHTML='';
+  SPACE_CATS.forEach(cat=>{
+    const cnt=SPACE_DATA.filter(d=>d.c===cat.id).length;
+    const btn=document.createElement('button');
+    btn.className='cat-tab'+(cat.id===spaceActiveCat?' active':'');
+    btn.style.borderColor=cat.id===spaceActiveCat?cat.color:'';
+    btn.style.color=cat.id===spaceActiveCat?cat.color:'';
+    btn.innerHTML=`<div class="cat-dot" style="background:${cat.color}"></div>${cat.label.replace(/^[^\s]+ /,'')} <span style="font-size:10px;opacity:.6">${cnt}</span>`;
+    btn.onclick=()=>{spaceActiveCat=cat.id;renderSpaceContent();document.querySelectorAll('#space-tabs .cat-tab').forEach(b=>{b.classList.remove('active');b.style.borderColor='';b.style.color='';}); btn.classList.add('active');btn.style.borderColor=cat.color;btn.style.color=cat.color;};
+    tabsEl.appendChild(btn);
+  });
+  renderSpaceContent();
+}
+function renderSpaceContent(){
+  const cat=SPACE_CATS.find(c=>c.id===spaceActiveCat);
+  const el=document.getElementById('space-content');
+  el.innerHTML=`<div style="padding:11px 13px;border-radius:10px;border:1px solid var(--border);border-left:3px solid ${cat.color};background:var(--bg2);margin-bottom:1rem;font-size:12px;color:var(--text2);line-height:1.55">${cat.desc}</div>`;
+  const filtered=SPACE_DATA.filter(d=>d.c===cat.id);
+  const gcls={S:'gs',A:'ga',B:'gb',C:'gc'};
+  const groups={};
+  filtered.forEach(d=>{if(!groups[d.g])groups[d.g]=[];groups[d.g].push(d);});
+  const glabels={S:'S급 — 직접 수혜 확인',A:'A급 — 핵심 관련',B:'B급 — 관심주',C:'C급'};
+  ['S','A','B','C'].forEach(g=>{
+    if(!groups[g]) return;
+    const lbl=document.createElement('div');lbl.className='grade-label';lbl.textContent=glabels[g];el.appendChild(lbl);
+    const grid=document.createElement('div');grid.className='cards-grid';
+    groups[g].forEach(d=>{
+      const card=document.createElement('div');
+      card.className='card'+(d.top?' top-card':'');
+      card.style.borderLeftColor=cat.color;
+      card.innerHTML=`<div class="card-head"><span class="card-name">${d.n}</span><div class="badges">${d.top?'<span class="top-badge">대장</span>':''}<span class="grade-badge ${gcls[g]}">${g}급</span></div></div>
+        <div class="card-body">${d.desc}</div>
+        <div class="card-hl" style="border-left-color:${cat.color}">${d.hl}</div>`;
+      grid.appendChild(card);
+    });
+    el.appendChild(grid);
+  });
+}
+
+/* ─── 초기화 ─── */
+renderProc();
+renderEco();
+renderOpt();
+renderSpace();
+</script>
+</body>
+</html>
